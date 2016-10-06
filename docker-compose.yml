@@ -1,0 +1,78 @@
+version: '2'
+
+services:
+
+  # Nginx as a load-balancing tier and reverse proxy
+  nginx:
+    build: nginx/
+    mem_limit: 128m
+    ports:
+      - "80:80"     # nginx
+      - "9090:9090" # telemetry
+    network_mode: host
+    links:
+      - consul:consul
+      - fortunes:fortunes
+    environment:
+      - SELF_HOST
+    restart: always
+    command: >
+      /usr/local/bin/containerpilot
+      -config file:///etc/containerpilot/containerpilot.json
+      nginx -g "daemon off;"
+
+  # the Node.js application
+  fortunes:
+    build: fortunes/
+    mem_limit: 128m
+    ports:
+      - "3000:3000" # node
+      - "9091:9091" # telemetry
+    network_mode: host
+    links:
+      - consul:consul
+      - mysql:mysql
+    environment:
+      - SELF_HOST
+    restart: always
+    command: >
+      /usr/local/bin/containerpilot
+      -config file:///etc/containerpilot/containerpilot.json
+      node /src/fortunes.js
+
+  # database
+  mysql:
+    build: mysql/
+    mem_limit: 128m
+    ports:
+      - "3306:3306" # mysql
+      - "9092:9092" # telemetry
+    network_mode: host
+    links:
+      - consul:consul
+    environment:
+      - SELF_HOST
+    restart: always
+
+  consul:
+    image: autopilotpattern/consul:0.7r0.7
+    mem_limit: 128m
+    ports:
+      - "8500:8500"
+      - "53:53"
+      - "8300:8300"
+      - "8301:8301"
+      - "8302:8302"
+      - "8400:8400"
+    network_mode: host
+    environment:
+      - SELF_HOST
+    restart: always
+    command: >-
+      /usr/local/bin/consul agent
+          -data-dir=/data
+          -config-dir=/config
+          -rejoin
+          -retry-join ${CONSUL_HOST}
+          -retry-max 10
+          -retry-interval 10s

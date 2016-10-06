@@ -1,0 +1,31 @@
+{
+  "consul": "consul:8500",
+  "logging": {"level": "DEBUG"},
+  "services": [
+    {
+      "name": "{{ .SELF_HOST }}-fortunes",
+      "port": 3000,
+      "health": "/usr/bin/curl -o /dev/null --fail -s http://localhost:3000/data",
+      "poll": 3,
+      "ttl": 10
+    }
+  ],
+  "backends": [
+    {
+      "name": "{{ .SELF_HOST }}-mysql",
+      "poll": 5,
+      "onChange": "/usr/local/bin/reload.sh"
+    }
+  ],
+  "telemetry": {
+    "port": 9091,
+    "sensors": [
+      {
+        "name": "fortunes_something",
+        "help": "Something something",
+        "type": "gauge",
+        "poll": 5,
+        "check": ["/usr/local/bin/sensor.sh", "unhandled"]
+      }
+  }
+}

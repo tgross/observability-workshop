@@ -1,0 +1,39 @@
+{
+  "consul": "consul:8500",
+  "logging": {"level": "DEBUG"},
+  "services": [
+    {
+      "name": "{{ .SELF_HOST }}-nginx",
+      "port": 80,
+      "health": "/usr/bin/curl -o /dev/null --fail -s http://localhost:80/health",
+      "poll": 3,
+      "ttl": 10
+    }
+  ],
+  "backends": [
+    {
+      "name": "{{ .SELF_HOST }}-fortunes",
+      "poll": 5,
+      "onChange": "/usr/local/bin/reload.sh"
+    }
+  ],
+  "telemetry": {
+    "port": 9090,
+    "sensors": [
+      {
+        "name": "nginx_connections_unhandled_total",
+        "help": "Number of accepted connnections that were not handled",
+        "type": "gauge",
+        "poll": 5,
+        "check": ["/usr/local/bin/sensor.sh", "unhandled"]
+      },
+      {
+        "name": "nginx_connections_load",
+        "help": "Ratio of active connections (less waiting) to the maximum worker connections",
+        "type": "gauge",
+        "poll": 5,
+        "check": ["/usr/local/bin/sensor.sh", "connections_load"]
+      }
+    ]
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "name": "fortunes",
+  "version": "0.0.1",
+  "description": "Fortunes",
+  "main": "fortunes.js",
+  "scripts": {},
+  "author": "Tim Gross, Joyent",
+  "license": "Mozilla Public License 2.0",
+  "dependencies": {
+    "mysql": "2.x.x"
+  }
+}
