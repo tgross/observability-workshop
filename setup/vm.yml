@@ -39,3 +39,8 @@
            dest=/home/ubuntu/workshop
            update=yes
       become: false
+
+    - name: Setup bash shell environment
+      copy: src=.bash_profile
+            dest=/home/ubuntu/.bash_profile
+      become: false
