@@ -1,19 +1,20 @@
 {
   "consul": "consul:8500",
+  "preStart": "/usr/local/bin/reload.sh preStart",
   "logging": {"level": "DEBUG"},
   "services": [
     {
-      "name": "{{ .SELF_HOST }}-nginx",
+      "name": "nginx",
       "port": 80,
-      "health": "/usr/bin/curl -o /dev/null --fail -s http://localhost:80/health",
-      "poll": 3,
-      "ttl": 10
+      "health": "/usr/bin/curl --fail --silent --show-error --output /dev/null http://localhost/nginx-health",
+      "poll": 10,
+      "ttl": 25
     }
   ],
   "backends": [
     {
-      "name": "{{ .SELF_HOST }}-fortunes",
-      "poll": 5,
+      "name": "fortunes",
+      "poll": 7,
       "onChange": "/usr/local/bin/reload.sh"
     }
   ],

@@ -15,6 +15,7 @@ services:
       - fortunes:fortunes
     environment:
       - SELF_HOST
+      - CONSUL=consul
     restart: always
     command: >
       /usr/local/bin/containerpilot
@@ -34,6 +35,7 @@ services:
       - mysql:mysql
     environment:
       - SELF_HOST
+      - CONSUL=consul
     restart: always
     command: >
       /usr/local/bin/containerpilot
@@ -52,8 +54,10 @@ services:
       - consul:consul
     environment:
       - SELF_HOST
+      - CONSUL=consul
     restart: always
 
+  # consul agent that will join the shared cluster
   consul:
     image: autopilotpattern/consul:0.7r0.7
     mem_limit: 128m
