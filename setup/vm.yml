@@ -4,7 +4,8 @@
 
 - hosts: students
   remote_user: ubuntu
-  sudo: yes
+  become: true
+  become_method: sudo
 
   tasks:
     - name: Update apt key
@@ -35,5 +36,6 @@
 
     - name: Add application
       git: repo=https://github.com/tgross/observability-workshop.git
-           dest=/src/workshop
+           dest=/home/ubuntu/workshop
            update=yes
+      become: false
