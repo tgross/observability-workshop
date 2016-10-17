@@ -13,7 +13,7 @@ consul:
     dns:
        - 127.0.0.1
     environment:
-      - CONSUL=consul.svc.0f06a3e0-a0da-eb00-a7ae-989d4e44e2ad.us-east-1.cns.joyent.com
+      - CONSUL=consul.svc.${TRITON_ACCOUNT}.us-east-1.cns.joyent.com
     command: >
       /usr/local/bin/containerpilot
       /bin/consul agent -server

@@ -59,7 +59,7 @@ services:
 
   # consul agent that will join the shared cluster
   consul:
-    image: autopilotpattern/consul:0.7r0.7
+    image: consul/
     mem_limit: 128m
     ports:
       - "8500:8500"
