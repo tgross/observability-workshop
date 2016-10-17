@@ -73,6 +73,8 @@ services:
       - SELF_HOST
     restart: always
     command: >-
+      /usr/local/bin/containerpilot
+      -config file:///etc/containerpilot.json
       /bin/consul agent
           -data-dir=/data
           -config-dir=/etc/consul
