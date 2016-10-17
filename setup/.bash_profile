@@ -11,4 +11,4 @@ PATH="$HOME/bin:$HOME/.local/bin:$PATH"
 
 # set environment
 export SELF_HOST=$(hostname)
-export CONSUL_HOST=consul.svc.0f06a3e0-a0da-eb00-a7ae-989d4e44e2ad.us-east-1.cns.joyent.com:8500
+export CONSUL_HOST=consul.svc.0f06a3e0-a0da-eb00-a7ae-989d4e44e2ad.us-east-1.cns.joyent.com

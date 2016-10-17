@@ -73,9 +73,9 @@ services:
       - SELF_HOST
     restart: always
     command: >-
-      /usr/local/bin/consul agent
+      /bin/consul agent
           -data-dir=/data
-          -config-dir=/config
+          -config-dir=/etc/consul
           -rejoin
           -retry-join ${CONSUL_HOST}
           -retry-max 10
