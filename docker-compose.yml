@@ -59,7 +59,7 @@ services:
 
   # consul agent that will join the shared cluster
   consul:
-    image: consul/
+    build: consul/
     mem_limit: 128m
     ports:
       - "8500:8500"
