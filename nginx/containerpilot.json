@@ -1,7 +1,6 @@
 {
   "consul": "localhost:8500",
   "preStart": "/usr/local/bin/reload.sh preStart",
-  "logging": {"level": "DEBUG"},
   "services": [
     {
       "name": "nginx",
