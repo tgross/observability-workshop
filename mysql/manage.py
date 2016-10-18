@@ -103,13 +103,6 @@ def assert_initialized_for_state(node):
                   'continue.', node.name, ex)
         os.rmdir(LOCK_PATH)
         sys.exit(1)
-    if node.cp.update():
-        node.cp.reload()
-        # this is racy with the SIGHUP that ContainerPilot just got
-        # sent, but if the Consul agent shuts down quickly enough we
-        # end up sending extra API calls to it and get a bunch of log
-        # spam. This forces us to exit early.
-        sys.exit(0)
     return False
 
 
@@ -120,8 +113,6 @@ def run_as_primary(node):
     Oracle-provided Docker image:
     https://github.com/mysql/mysql-docker/blob/mysql-server/5.7/docker-entrypoint.sh
     """
-    if not node.consul.mark_as_primary(node.name):
-        return False
     node.cp.state = PRIMARY
 
     conn = node.mysql.wait_for_connection()

@@ -46,6 +46,9 @@ services:
     environment:
       - SELF_HOST
       - CONSUL=localhost
+      - MYSQL_USER=me
+      - MYSQL_PASSWORD=password1
+      - MYSQL_DATABASE=mydb
     restart: always
 
   # consul agent that will join the shared cluster
