@@ -13,20 +13,5 @@
       "poll": 5,
       "ttl": 25
     }
-  ],
-  "backends": [
-    {
-      "name": "mysql-primary",
-      "poll": 10,
-      "onChange": "python /usr/local/bin/manage.py on_change"
-    }
-  ],
-  "tasks": [
-    {
-      "name": "snapshot_check",
-      "command": "python /usr/local/bin/manage.py snapshot_task",
-      "frequency": "5m",
-      "timeout": "10m"
-    }
   ]
 }
