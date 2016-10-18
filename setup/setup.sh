@@ -10,7 +10,8 @@ create() {
     for (( c=1; c<=${count}; c++ )); do
         triton instance create \
                --name="student-${c}" "${image}" "${package}" \
-               --network="${private},${public}" \
+               --network="${public},${private}" \
+               -t "sdc_docker=true" \
                --script=./userscript.sh
     done
 }
