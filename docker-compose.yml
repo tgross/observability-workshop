@@ -10,12 +10,9 @@ services:
       - "80:80"     # nginx
       - "9090:9090" # telemetry
     network_mode: host
-    links:
-      - consul:consul
-      - fortunes:fortunes
     environment:
       - SELF_HOST
-      - CONSUL=consul
+      - CONSUL=localhost
     restart: always
     command: >
       /usr/local/bin/containerpilot
@@ -30,12 +27,9 @@ services:
       - "3000:3000" # node
       - "9091:9091" # telemetry
     network_mode: host
-    links:
-      - consul:consul
-      - mysql:mysql
     environment:
       - SELF_HOST
-      - CONSUL=consul
+      - CONSUL=localhost
     restart: always
     command: >
       /usr/local/bin/containerpilot
@@ -47,14 +41,11 @@ services:
     build: mysql/
     mem_limit: 128m
     ports:
-      - "3306:3306" # mysql
       - "9092:9092" # telemetry
     network_mode: host
-    links:
-      - consul:consul
     environment:
       - SELF_HOST
-      - CONSUL=consul
+      - CONSUL=localhost
     restart: always
 
   # consul agent that will join the shared cluster
