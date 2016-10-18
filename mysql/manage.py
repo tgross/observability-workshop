@@ -124,6 +124,7 @@ def run_as_primary(node):
         my.setup_root_user(conn)
         my.create_db(conn)
         my.create_default_user(conn)
+        my.create_repl_user(conn)
         my.expire_root_password(conn)
     else:
         # in case this is a newly-promoted primary
