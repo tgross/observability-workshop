@@ -4,7 +4,7 @@
   "services": [
     {
       "name": "consul",
-      "interfaces": ["net1", "docker0"],
+      "interfaces": ["net1", "eth0", "docker0"],
       "port": 8500,
       "health": "curl --fail -s -o /dev/null localhost:8500/v1/status/leader",
       "poll": 10,

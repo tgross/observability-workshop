@@ -7,7 +7,7 @@
   "services": [
     {
       "name": "mysql",
-      "interfaces": ["net1", "docker0"],
+      "interfaces": ["net1", "eth0", "docker0"],
       "port": 3306,
       "health": "python /usr/local/bin/manage.py health",
       "poll": 5,

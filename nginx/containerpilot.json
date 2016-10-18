@@ -4,7 +4,7 @@
   "services": [
     {
       "name": "nginx",
-      "interfaces": ["net1", "docker0"],
+      "interfaces": ["net2", "eth0", "docker0"],
       "port": 80,
       "health": "/usr/bin/curl --fail --silent --show-error --output /dev/null http://localhost/nginx-health",
       "poll": 10,
@@ -20,7 +20,7 @@
   ],
   "telemetry": {
     "port": 9090,
-    "interfaces": ["net1", "docker0"],
+    "interfaces": ["net1", "eth0", "docker0"],
     "sensors": [
       {
         "name": "nginx_connections_unhandled_total",
