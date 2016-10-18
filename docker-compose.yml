@@ -48,6 +48,8 @@ services:
       - CONSUL=localhost
       - MYSQL_USER=me
       - MYSQL_PASSWORD=password1
+      - MYSQL_REPL_USER=repl
+      - MYSQL_REPL_PASSWORD=password2
       - MYSQL_DATABASE=mydb
     restart: always
 
