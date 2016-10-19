@@ -1,4 +1,31 @@
 'use strict'
+const mysql = require('mysql');
+
+const user = process.env.MYSQL_USER;
+const password = process.env.MYSQL_PASSWORD;
+const db = process.env.MYSQL_DATABASE;
+const host = process.env.MYSQL_HOST;
+
+const assertCreds = function(key, env) {
+  if (key == undefined) {
+    console.error('Environment variable '+env+' is unset. Exiting.')
+    process.exit(-1)
+  }
+}
+
+assertCreds(user, 'MYSQL_USER');
+assertCreds(password, 'MYSQL_PASSWORD');
+assertCreds(db, 'MYSQL_DATABASE');
+assertCreds(host, 'MYSQL_HOST');
+
+exports.getConnection = () => {
+  return mysql.createConnection({
+    host: host,
+    user: user,
+    password: password,
+    database: db
+  });
+}
 
 // our schema
 exports.create = 'CREATE TABLE fortunes (id INT, fortune TEXT);'

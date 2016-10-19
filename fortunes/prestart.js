@@ -4,36 +4,10 @@ prestart.js will force us to wait to start until MySQL has started,
 enforce that we've properly set up credentials for the DB, and will
 pre-populate the DB if it hasn't yet been populated.
 */
-
-const mysql = require('mysql');
-const user = process.env.MYSQL_USER;
-const password = process.env.MYSQL_PASSWORD;
-const db = process.env.MYSQL_DATABASE;
-const host = process.env.MYSQL_HOST;
-
 const Schema = require('./lib/schema');
 
-
 var connected = false;
-
-const assertCreds = function(key, env) {
-  if (key == undefined) {
-    console.error('Environment variable '+env+' is unset. Exiting.')
-    process.exit(-1)
-  }
-}
-
-assertCreds(user, 'MYSQL_USER');
-assertCreds(password, 'MYSQL_PASSWORD');
-assertCreds(db, 'MYSQL_DATABASE');
-assertCreds(host, 'MYSQL_HOST');
-
-var connection = mysql.createConnection({
-  host: host,
-  user: user,
-  password: password,
-  database: db
-});
+var connection = Schema.getConnection();
 
 const quit = function(code, msg) {
   if (msg) {
