@@ -1,5 +1,5 @@
 {
-  "consul": "localhost:8500",
+  "consul": "{{ .CONSUL }}:8500",
   "preStart": "python /usr/local/bin/manage.py",
   "logging": {
     "level": "INFO"

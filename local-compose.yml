@@ -46,7 +46,7 @@ services:
   # database
   mysql:
     build: mysql/
-    mem_limit: 128m
+    mem_limit: 256m
     ports:
       - "3306:3306" # mysql
       - "9092:9092" # telemetry
@@ -60,6 +60,8 @@ services:
       - MYSQL_REPL_USER=repl
       - MYSQL_REPL_PASSWORD=password2
       - MYSQL_DATABASE=mydb
+      - INNODB_BUFFER_POOL_SIZE=128
+      - INTERFACE=eth0
     restart: always
 
   # consul agent that will join the shared cluster
@@ -75,11 +77,12 @@ services:
       - "8400:8400"
     environment:
       - SELF_HOST
+      - CONSUL_HOST=localhost
     restart: always
     command: >-
       /usr/local/bin/containerpilot
       -config file:///etc/containerpilot.json
-      /bin/consul -server -bootstrap
+      /bin/consul agent -server -bootstrap
           -ui-dir /ui
           -data-dir=/data
           -config-dir=/etc/consul

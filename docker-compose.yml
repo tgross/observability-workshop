@@ -71,6 +71,7 @@ services:
     network_mode: host
     environment:
       - SELF_HOST
+      - CONSUL_HOST
     restart: always
     command: >-
       /usr/local/bin/containerpilot

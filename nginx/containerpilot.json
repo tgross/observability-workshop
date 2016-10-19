@@ -1,5 +1,5 @@
 {
-  "consul": "localhost:8500",
+  "consul": "{{ .CONSUL }}:8500",
   "preStart": "/usr/local/bin/reload.sh preStart",
   "services": [
     {

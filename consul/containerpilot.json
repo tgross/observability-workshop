@@ -1,5 +1,5 @@
 {
-  "consul": "127.0.0.1:8500",
+  "consul": "{{ .CONSUL_HOST }}:8500",
   "preStart": ["/usr/local/bin/consul-manage", "preStart"],
   "services": [
     {
