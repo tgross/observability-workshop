@@ -12,7 +12,7 @@ import sys
 from manager.containerpilot import ContainerPilot
 from manager.libconsul import Consul
 from manager.libmysql import MySQL, MySQLError
-from manager.utils import log, get_ip, debug, PRIMARY
+from manager.utils import log, get_ip, debug, env, PRIMARY
 
 class Node(object):
     """
@@ -25,7 +25,7 @@ class Node(object):
         self.cp = cp
         self.hostname = socket.gethostname()
         self.name = 'mysql-{}'.format(self.hostname)
-        self.ip = get_ip('net1')
+        self.ip = get_ip(env('INTERFACE', 'net1'))
 
 # ---------------------------------------------------------
 # Top-level functions called by ContainerPilot
