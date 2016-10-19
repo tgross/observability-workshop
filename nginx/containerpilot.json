@@ -3,7 +3,7 @@
   "preStart": "/usr/local/bin/reload.sh preStart",
   "services": [
     {
-      "name": "nginx",
+      "name": "{{ .SELF_HOST }}-nginx",
       "interfaces": ["net2", "eth0", "docker0"],
       "port": 80,
       "health": "/usr/bin/curl --fail --silent --show-error --output /dev/null http://localhost/nginx-health",

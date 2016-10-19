@@ -3,7 +3,7 @@
   "preStart": ["/usr/local/bin/consul-manage", "preStart"],
   "services": [
     {
-      "name": "consul",
+      "name": "{{ .SELF_HOST }}-consul",
       "interfaces": ["net1", "eth0", "docker0"],
       "port": 8500,
       "health": "curl --fail -s -o /dev/null localhost:8500/v1/status/leader",

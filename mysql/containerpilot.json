@@ -6,7 +6,7 @@
   },
   "services": [
     {
-      "name": "mysql",
+      "name": "{{ .SELF_HOST }}-mysql",
       "interfaces": ["net1", "eth0", "docker0"],
       "port": 3306,
       "health": "python /usr/local/bin/manage.py health",
