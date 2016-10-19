@@ -2,17 +2,24 @@
 
 const Http = require('http');
 const Data = require('./lib/data');
+const Template = require('./lib/template');
 
 // The root route queries MySQL and fills in a template
 // with the data
 const getRoot = function (req, res) {
-  Data.select((err, body) => {
+  Data.select((err, content) => {
     if (err) {
       res.writeHead(500);
       return res.end(err);
     }
-    res.writeHead(200);
-    return res.end(body);
+    Template.render(content, (err, body) => {
+      if (err) {
+        res.writeHead(500);
+        return res.end(err);
+      }
+      res.writeHead(200);
+      return res.end(body);
+    });
   });
 }
 
