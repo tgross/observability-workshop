@@ -13,7 +13,7 @@ services:
       - fortunes:fortunes
       - consul:consul
     environment:
-      - SELF_HOST
+      - SELF_HOST=localhost
       - CONSUL=consul
     restart: always
     command: >
@@ -32,15 +32,24 @@ services:
       - mysql:mysql
       - consul:consul
     environment:
-      - SELF_HOST
+      - SELF_HOST=localhost
       - CONSUL=consul
+      - MYSQL_HOST=mysql
       - MYSQL_USER=me
       - MYSQL_PASSWORD=password1
       - MYSQL_DATABASE=mydb
+    volumes:
+      # we included these in our Docker build but we want to be able
+      # to update them live in the workshop w/o imposing a rebuild
+      - ./fortunes/fortunes.js:/src/fortunes.js
+      - ./fortunes/sensor.js:/src/sensor.js
+      - ./fortunes/prestart.js:/src/prestart.js
+      - ./fortunes/lib/data.js:/src/lib/data.js
+      - ./fortunes/lib/schema.js:/src/lib/schema.js
     restart: always
     command: >
-      /usr/local/bin/containerpilot
-      -config file:///etc/containerpilot/containerpilot.json
+      /bin/containerpilot
+      -config file:///etc/containerpilot.json
       node /src/fortunes.js
 
   # database
@@ -53,7 +62,7 @@ services:
     links:
       - consul:consul
     environment:
-      - SELF_HOST
+      - SELF_HOST=localhost
       - CONSUL=consul
       - MYSQL_USER=me
       - MYSQL_PASSWORD=password1
@@ -76,7 +85,7 @@ services:
       - "8302:8302"
       - "8400:8400"
     environment:
-      - SELF_HOST
+      - SELF_HOST=localhost
       - CONSUL_HOST=localhost
     restart: always
     command: >-

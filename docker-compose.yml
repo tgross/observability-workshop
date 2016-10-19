@@ -30,13 +30,22 @@ services:
     environment:
       - SELF_HOST
       - CONSUL=localhost
+      - MYSQL_HOST=localhost
       - MYSQL_USER=me
       - MYSQL_PASSWORD=password1
       - MYSQL_DATABASE=mydb
+    volumes:
+      # we included these in our Docker build but we want to be able
+      # to update them live in the workshop w/o imposing a rebuild
+      - ./fortunes/fortunes.js:/src/fortunes.js
+      - ./fortunes/sensor.js:/src/sensor.js
+      - ./fortunes/prestart.js:/src/prestart.js
+      - ./fortunes/lib/data.js:/src/lib/data.js
+      - ./fortunes/lib/schema.js:/src/lib/schema.js
     restart: always
     command: >
-      /usr/local/bin/containerpilot
-      -config file:///etc/containerpilot/containerpilot.json
+      /bin/containerpilot
+      -config file:///etc/containerpilot.json
       node /src/fortunes.js
 
   # database

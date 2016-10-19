@@ -8,8 +8,8 @@ RUN apk update && apk add \
     && rm -rf /var/cache/apk/*
 
 # install all dependencies
-COPY package.json /opt/fortunes/
-RUN cd /opt/fortunes && npm install
+COPY package.json /src/
+RUN cd /src && npm install
 
 # get ContainerPilot release
 ENV CONTAINERPILOT_VERSION 2.4.3
@@ -21,8 +21,8 @@ RUN export CP_SHA1=2c469a0e79a7ac801f1c032c2515dd0278134790 \
     && rm /tmp/containerpilot.tar.gz
 
 # add our application
-COPY fortunes.js /opt/fortunes/
-COPY lib/ /opt/fortunes/lib/
+COPY *.js /src/
+COPY lib/ /src/lib/
 
 # add ContainerPilot configuration and scripts
 COPY containerpilot.json /etc/containerpilot.json
@@ -31,5 +31,5 @@ ENV CONTAINERPILOT=file:///etc/containerpilot.json
 EXPOSE 3000
 CMD [ "/bin/containerpilot", \
       "node", \
-      "/opt/fortunes/fortunes.js" \
+      "/src/fortunes.js" \
 ]
