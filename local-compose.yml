@@ -41,7 +41,6 @@ services:
     volumes:
       # we included these in our Docker build but we want to be able
       # to update them live in the workshop w/o imposing a rebuild
-      - ./fortunes/test.js:/src/test.js
       - ./fortunes/fortunes.js:/src/fortunes.js
       - ./fortunes/sensor.js:/src/sensor.js
       - ./fortunes/prestart.js:/src/prestart.js
