@@ -38,6 +38,6 @@ exports.check = function (cb) {
       });
     }
     cb(err);
+    connection.release()
   });
-  connection.release()
 }
