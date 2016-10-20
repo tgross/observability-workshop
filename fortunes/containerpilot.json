@@ -16,11 +16,18 @@
     "interfaces": ["net1", "eth0", "docker0"],
     "sensors": [
       {
-        "name": "fortunes_something",
-        "help": "Something something",
+        "name": "fortunes_handles",
+        "help": "File handles open by fortunes",
         "type": "gauge",
         "poll": 5,
-        "check": "node /src/sensor.js"
+        "check": "node /src/sensor.js handles"
+      },
+      {
+        "name": "fortunes_mem",
+        "help": "Free memory for fortunes",
+        "type": "gauge",
+        "poll": 5,
+        "check": "node /src/sensor.js mem"
       }
     ]
   }
