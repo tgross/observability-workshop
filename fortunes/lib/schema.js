@@ -65,7 +65,7 @@ exports.initialInsert = `INSERT INTO fortunes (id, fortune) VALUES
     (17,"It's a curious thing about our industry: not only do we not learn from our mistakes, we also don't learn from our successes. (Keith Braithwaite)"),
     (18,"There are only two kinds of programming languages: those people always bitch about and those nobody uses. (Bjarne Stroustrup)"),
     (19,"In order to understand recursion, one must first understand recursion. (Anonymous)"),
-    (20,"The cheapest, fastest, and most reliable components are those that aren’t there. (Gordon Bell)"),
+    (20,"The cheapest, fastest, and most reliable components are those that aren't there. (Gordon Bell)"),
     (21,"The best performance improvement is the transition from the nonworking state to the working state. (J. Osterhout)"),
     (22,"The trouble with programmers is that you can never tell what a programmer is doing until it's too late. (Seymour Cray)"),
     (23,"Don't worry if it doesn't work right. If everything did, you'd be out of a job. (Mosher's Law of Software Engineering)")
