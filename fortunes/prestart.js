@@ -5,14 +5,9 @@ enforce that we've properly set up credentials for the DB, and will
 pre-populate the DB if it hasn't yet been populated.
 */
 const Schema = require('./lib/schema');
-const bunyan = require('bunyan');
+const Observe = require('./lib/observe');
 
-var log = bunyan.createLogger({
-  name: "fortunes",
-  stream: process.stdout,
-  level: "info"
-});
-
+var log = Observe.log;
 var connected = false;
 var connection = Schema.getConnection();
 

@@ -38,6 +38,7 @@ services:
       - MYSQL_USER=me
       - MYSQL_PASSWORD=password1
       - MYSQL_DATABASE=mydb
+      - LOG_LEVEL=debug
     volumes:
       # we included these in our Docker build but we want to be able
       # to update them live in the workshop w/o imposing a rebuild

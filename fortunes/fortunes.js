@@ -3,32 +3,33 @@
 const Http = require('http');
 const Data = require('./lib/data');
 const Template = require('./lib/template');
-const bunyan = require('bunyan');
+const Observe = require('./lib/observe');
 
-var log = bunyan.createLogger({
-  name: "fortunes",
-  stream: process.stdout,
-  level: "info"
-});
+var log = Observe.log;
+var elapsed = Observe.elapsed_time;
+
 
 // The root route queries MySQL and fills in a template
 // with the data
 const getRoot = function (req, res) {
+  var start = process.hrtime();
   var reqId = req.headers["x-request-id"];
-  Data.select((err, content) => {
+  Data.select(reqId, (err, content) => {
     if (err) {
       res.writeHead(500);
-      log.error({err: err, req_id: reqId}, "error in querying data");
+      log.error({err: err, req_id: reqId, elapsed: elapsed(start)},
+                "error in querying data");
       return
     }
     Template.render(content, (err, body) => {
       if (err) {
         res.writeHead(500);
-        log.error({err: err, req_id: reqId}, "error in rendering template");
+        log.error({err: err, req_id: reqId, elapsed: elapsed(start)},
+                  "error in rendering template");
         return
       }
       res.writeHead(200);
-      log.info({req_id: reqId}, "ok");
+      log.info({req_id: reqId, elapsed: elapsed(start)}, "ok");
       return res.end(body);
     });
   });

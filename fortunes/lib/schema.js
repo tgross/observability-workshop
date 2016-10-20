@@ -1,12 +1,8 @@
 'use strict'
 const mysql = require('mysql');
-const bunyan = require('bunyan');
+const Observe = require('./observe');
 
-var log = bunyan.createLogger({
-  name: "fortunes",
-  stream: process.stdout,
-  level: "info"
-});
+var log = Observe.log;
 
 const user = process.env.MYSQL_USER;
 const password = process.env.MYSQL_PASSWORD;
