@@ -5,8 +5,10 @@
   "main": "fortunes.js",
   "scripts": {},
   "author": "Tim Gross, Joyent",
-  "license": "Mozilla Public License 2.0",
+  "repository": "github.com/tgross/observability-workshop",
+  "license": "MPL-2.0",
   "dependencies": {
-    "mysql": "2.x.x"
+    "mysql": "2.x.x",
+    "bunyan": "1.8.3"
   }
 }

@@ -1,5 +1,12 @@
 'use strict'
 const mysql = require('mysql');
+const bunyan = require('bunyan');
+
+var log = bunyan.createLogger({
+  name: "fortunes",
+  stream: process.stdout,
+  level: "info"
+});
 
 const user = process.env.MYSQL_USER;
 const password = process.env.MYSQL_PASSWORD;
@@ -8,7 +15,7 @@ const host = process.env.MYSQL_HOST;
 
 const assertCreds = function(key, env) {
   if (key == undefined) {
-    console.error('Environment variable '+env+' is unset. Exiting.')
+    log.error({"msg": 'Environment variable '+env+' is unset. Exiting.'});
     process.exit(-1)
   }
 }
