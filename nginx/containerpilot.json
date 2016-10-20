@@ -13,7 +13,7 @@
   ],
   "backends": [
     {
-      "name": "fortunes",
+      "name": "{{ .SELF_HOST }}-fortunes",
       "poll": 7,
       "onChange": "/usr/local/bin/reload.sh"
     }
