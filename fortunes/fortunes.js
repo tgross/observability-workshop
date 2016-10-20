@@ -10,12 +10,14 @@ const getRoot = function (req, res) {
   Data.select((err, content) => {
     if (err) {
       res.writeHead(500);
-      return res.end(err);
+      console.error(err);
+      return
     }
     Template.render(content, (err, body) => {
       if (err) {
         res.writeHead(500);
-        return res.end(err);
+        console.error(err);
+        return
       }
       res.writeHead(200);
       return res.end(body);
@@ -29,7 +31,8 @@ const getHealth = function (req, res) {
   Data.check((err) => {
     if (err) {
       res.writeHead(500);
-      return res.end(err);
+      console.error(err);
+      return
     }
     res.writeHead(200);
     return res.end("ok");

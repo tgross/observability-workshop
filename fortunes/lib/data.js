@@ -1,16 +1,16 @@
 'use strict';
 
-const Schema = require('./lib/schema');
+const Schema = require('./schema');
 
-var connection = Schema.getConnection();
+var pool = Schema.getPool();
 
 // fetch a fortune
 exports.select = function (cb) {
-  connection.connect((err) => {
+  pool.getConnection((err, connection) => {
     if (err == null) {
       // TODO: this seems inefficient?
       connection.query('SELECT id, fortune FROM fortunes', [], (err, results, fields) => {
-        val = results[Math.floor(Math.random() * 23)][1].fortune;
+        var val = results[Math.floor(Math.random() * 23)].fortune;
         cb(err, val);
       });
       // TODO: what if we did this instead?
@@ -25,12 +25,13 @@ exports.select = function (cb) {
     } else {
       cb(err);
     }
+    connection.release();
   });
 }
 
 // check to see if the table is set up and healthy
 exports.check = function (cb) {
-  connection.connect((err) => {
+  pool.getConnection((err, connection) => {
     if (err == null) {
       connection.query('SELECT COUNT(*) from fortunes', [], (err) => {
         cb(err);
@@ -38,4 +39,5 @@ exports.check = function (cb) {
     }
     cb(err);
   });
+  connection.release()
 }

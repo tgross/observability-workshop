@@ -27,6 +27,16 @@ exports.getConnection = () => {
   });
 }
 
+exports.getPool = () => {
+  return mysql.createPool({
+    connectionLimit: 4,
+    host: host,
+    user: user,
+    password: password,
+    database: db
+  });
+}
+
 // our schema
 exports.create = 'CREATE TABLE fortunes (id INT, fortune TEXT);'
 
