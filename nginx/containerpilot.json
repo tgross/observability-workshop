@@ -7,14 +7,14 @@
       "interfaces": ["net2", "eth0", "docker0"],
       "port": 80,
       "health": "/usr/bin/curl --fail --silent --show-error --output /dev/null http://localhost/nginx-health",
-      "poll": 10,
+      "poll": 5,
       "ttl": 25
     }
   ],
   "backends": [
     {
       "name": "{{ .SELF_HOST }}-fortunes",
-      "poll": 7,
+      "poll": 5,
       "onChange": "/usr/local/bin/reload.sh"
     }
   ],
