@@ -1,5 +1,8 @@
 version: '2'
 
+# note: SELF_HOST and LOGSTASH_HOST variables are set by the environment
+# on our Docker KVM host
+
 services:
 
   # Nginx as a load-balancing tier and reverse proxy
@@ -13,6 +16,10 @@ services:
     environment:
       - SELF_HOST
       - CONSUL=localhost
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "tcp://${LOGSTASH_HOST}:514"
     restart: always
     command: >
       /usr/local/bin/containerpilot
@@ -34,6 +41,10 @@ services:
       - MYSQL_USER=me
       - MYSQL_PASSWORD=password1
       - MYSQL_DATABASE=mydb
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "tcp://${LOGSTASH_HOST}:514"
     volumes:
       # we included these in our Docker build but we want to be able
       # to update them live in the workshop w/o imposing a rebuild
@@ -64,6 +75,10 @@ services:
       - MYSQL_REPL_PASSWORD=password2
       - MYSQL_DATABASE=mydb
       - INNODB_BUFFER_POOL_SIZE=128
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "tcp://${LOGSTASH_HOST}:514"
     restart: always
 
   # consul agent that will join the shared cluster
