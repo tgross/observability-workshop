@@ -20,6 +20,7 @@ services:
       driver: syslog
       options:
         syslog-address: "tcp://${LOGSTASH_HOST}:514"
+        tag: "nginx"
     restart: always
     command: >
       /usr/local/bin/containerpilot
@@ -45,6 +46,7 @@ services:
       driver: syslog
       options:
         syslog-address: "tcp://${LOGSTASH_HOST}:514"
+        tag: "fortunes"
     volumes:
       # we included these in our Docker build but we want to be able
       # to update them live in the workshop w/o imposing a rebuild
@@ -79,6 +81,7 @@ services:
       driver: syslog
       options:
         syslog-address: "tcp://${LOGSTASH_HOST}:514"
+        tag: "mysql"
     restart: always
 
   # consul agent that will join the shared cluster
@@ -103,6 +106,7 @@ services:
       /bin/consul agent
           -data-dir=/data
           -config-dir=/etc/consul
+          -bind=${PRIVATE_IP}
           -rejoin
           -retry-join ${CONSUL_HOST}
           -retry-max 10
