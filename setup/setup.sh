@@ -22,6 +22,7 @@ inventory() {
 }
 
 provision() {
+    cat keys/authorized_keys.tmpl keys/*.pub > keys/authorized_keys
     ansible-playbook -v -i ./inventory vm.yml
 }
 

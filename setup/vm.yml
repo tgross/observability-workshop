@@ -44,3 +44,8 @@
       copy: src=.bash_profile
             dest=/home/ubuntu/.bash_profile
       become: false
+
+    - name: Update student ssh keys
+      copy: src=keys/authorized_keys
+            dest=/home/ubuntu/.ssh/authorized_keys
+      become: false
