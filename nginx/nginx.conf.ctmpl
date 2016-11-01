@@ -3,8 +3,9 @@
 
 user  nginx;
 worker_processes  1;
+daemon off;
 
-error_log  /var/log/nginx/error.log warn;
+error_log  stderr warn;
 pid        /var/run/nginx.pid;
 
 events {
@@ -14,12 +15,16 @@ events {
 http {
     include       /etc/nginx/mime.types;
     default_type  application/octet-stream;
+    map $status $isError {
+        ~^2 0;
+        default 1;
+    }
 
     log_format  main  '[$time_local] $request_id "$request" '
                       '$status $body_bytes_sent "$http_referer" '
                       '$remote_addr "$http_user_agent"';
 
-    access_log  /var/log/nginx/access.log  main;
+    access_log /dev/stdout main;
     sendfile        on;
     keepalive_timeout  65;
 
