@@ -16,6 +16,11 @@ services:
       - SELF_HOST=localhost
       - CONSUL=consul
     restart: always
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "tcp://localhost:514"
+        tag: "nginx/{{ .ID }}"
     command: >
       /usr/local/bin/containerpilot
       -config file:///etc/containerpilot.json
@@ -26,7 +31,7 @@ services:
     build: fortunes/
     mem_limit: 128m
     ports:
-      - "3000" # node
+      - "3000:3000" # node
       - "9091" # telemetry
     links:
       - mysql:mysql
@@ -46,6 +51,11 @@ services:
       - ./fortunes/sensor.js:/src/sensor.js
       - ./fortunes/prestart.js:/src/prestart.js
       - ./fortunes/lib:/src/lib
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "tcp://localhost:514"
+        tag: "fortunes/{{ .ID }}"
     restart: always
     command: >
       /bin/containerpilot
@@ -71,6 +81,11 @@ services:
       - MYSQL_DATABASE=mydb
       - INNODB_BUFFER_POOL_SIZE=128
       - INTERFACE=eth0
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "tcp://localhost:514"
+        tag: "mysql/{{ .ID }}"
     restart: always
 
   # consul agent that will join the shared cluster
@@ -95,3 +110,18 @@ services:
           -ui-dir /ui
           -data-dir=/data
           -config-dir=/etc/consul
+
+  logstash:
+    mem_limit: 256m
+    build: ./setup/supporting
+    environment:
+      - CONSUL=consul
+      - CONTAINERPILOT=file:///etc/containerpilot.json
+    links:
+    - consul:consul
+    ports:
+    - "514:514"   # syslog tcp port
+    volumes:
+      - ./setup/supporting/logstash.conf:/etc/logstash/conf.d/logstash.conf
+    command: >
+      /opt/logstash/bin/logstash -f /etc/logstash/conf.d/logstash.conf
