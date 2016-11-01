@@ -22,7 +22,7 @@ consul:
 
 
 prometheus:
-    image: autopilotpattern/prometheus
+    image: 0x74696d/prometheus:workshop
     mem_limit: 1g
     restart: always
     labels:
