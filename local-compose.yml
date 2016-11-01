@@ -7,8 +7,8 @@ services:
     build: nginx/
     mem_limit: 128m
     ports:
-      - "80:80"     # nginx
-      - "9090:9090" # telemetry
+      - "80"     # nginx
+      - "9090" # telemetry
     links:
       - fortunes:fortunes
       - consul:consul
@@ -19,15 +19,15 @@ services:
     command: >
       /usr/local/bin/containerpilot
       -config file:///etc/containerpilot.json
-      nginx -g "daemon off;"
+      nginx
 
   # the Node.js application
   fortunes:
     build: fortunes/
     mem_limit: 128m
     ports:
-      - "3000:3000" # node
-      - "9091:9091" # telemetry
+      - "3000" # node
+      - "9091" # telemetry
     links:
       - mysql:mysql
       - consul:consul

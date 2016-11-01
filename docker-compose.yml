@@ -25,7 +25,7 @@ services:
     command: >
       /usr/local/bin/containerpilot
       -config file:///etc/containerpilot.json
-      nginx -g "daemon off;"
+      nginx
 
   # the Node.js application
   fortunes:
