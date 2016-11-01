@@ -61,7 +61,7 @@ kibana:
 # The logstash container is the target of Docker log drivers
 
 logstash:
-    image: autopilotpattern/logstash:latest
+    image: 0x74696d/logstash:workshop
     mem_limit: 1g
     restart: always
     labels:
