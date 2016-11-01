@@ -113,7 +113,7 @@ services:
 
   logstash:
     mem_limit: 256m
-    build: ./setup/supporting
+    build: ./setup/supporting/logstash
     environment:
       - CONSUL=consul
       - CONTAINERPILOT=file:///etc/containerpilot.json

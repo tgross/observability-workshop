@@ -64,7 +64,7 @@ kibana:
 
 logstash:
     mem_limit: 256m
-    build: .
+    build: ./logstash
     environment:
       - CONSUL=consul
       - CONTAINERPILOT=file:///etc/containerpilot.json
