@@ -16,18 +16,6 @@ const quit = function(code) {
   process.exit(code);
 }
 
-const connect = function(cb) {
-  connection.connect(function(err) {
-    if (err != null) {
-      cb(false);
-      return;
-    }
-    log.error({req_id: "prestart"}, "connection established!");
-    cb(true);
-  });
-}
-
-
 const checkTable = function(cb) {
   connection.query("SHOW TABLES LIKE 'fortunes';", [], (err, results, fields) => {
     if (err) {
@@ -85,14 +73,17 @@ const loadData = function() {
 
 
 log.info({req_id: "prestart"}, "creating DB connection");
-setInterval(function() {
-  if (!connected) {
-    connect((conn) => {
-      if (conn) {
-        connected =true;
-      }
-    });
-  } else {
-    checkTable(checkData);
+
+// we'll just die if MySQL isn't up yet rather than messing around with
+// resetting the lib's state machine for the connection. This is a little
+// dirty but we can count on the supervisor to restart the node process
+// after the prestart exits.
+connection.connect(function(err) {
+  if (err != null) {
+    log.warn({req_id: "prestart"}, "could not establish connection")
+    quit();
   }
-}, 500);
+  log.info({req_id: "prestart"}, "connection established");
+  checkTable(checkData);
+  return;
+});
