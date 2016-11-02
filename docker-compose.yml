@@ -13,6 +13,7 @@ services:
       - "80:80"     # nginx
       - "9090:9090" # telemetry
     network_mode: host
+    hostname: ${SELF_HOST}-nginx
     environment:
       - SELF_HOST
       - CONSUL=localhost
@@ -43,6 +44,7 @@ services:
       - "3000:3000" # node
       - "9091:9091" # telemetry
     network_mode: host
+    hostname: ${SELF_HOST}-fortunes
     environment:
       - SELF_HOST
       - CONSUL=localhost
@@ -77,6 +79,7 @@ services:
     ports:
       - "9092:9092" # telemetry
     network_mode: host
+    hostname: ${SELF_HOST}-mysql
     environment:
       - SELF_HOST
       - CONSUL=localhost
