@@ -21,6 +21,14 @@ services:
       options:
         syslog-address: "tcp://${LOGSTASH_HOST}:514"
         tag: "nginx/{{ .ID }}"
+    volumes:
+      # we don't have a full set of tooling in the small container so
+      # this provides tools we want from the underlying host
+      # (this plus LX is how we get DTrace on Linux on Triton!)
+      # you'll want to export PATH=$PATH:/native/bin
+      - /bin:/native/bin:ro
+      - /lib:/native/lib:ro
+      - /lib64:/native/lib64:ro
     restart: always
     command: >
       /usr/local/bin/containerpilot
