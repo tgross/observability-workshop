@@ -20,7 +20,7 @@ http {
         default 1;
     }
 
-    log_format  main  '[$time_local] $request_id "$request" '
+    log_format  main  '[$time_iso8601] $request_id "$request" '
                       '$status $body_bytes_sent "$http_referer" '
                       '$remote_addr "$http_user_agent"';
 
