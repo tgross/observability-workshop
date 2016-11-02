@@ -13,21 +13,23 @@ exports.select = function (reqId, cb) {
   pool.getConnection((err, connection) => {
     if (err == null) {
       // TODO: this seems inefficient?
+      var queryString = 'SELECT id, fortune FROM fortunes';
       var start = process.hrtime();
       connection.query(
-        'SELECT id, fortune FROM fortunes', [],
+        queryString, [],
         (err, results, fields) => {
-          log.debug({req_id: reqId, elapsed: elapsed(start)}, "query time");
+          log.debug({req_id: reqId, elapsed: elapsed(start), query: queryString}, "query time");
           var val = results[Math.floor(Math.random() * 23)].fortune;
           cb(err, val);
         });
       // TODO: what if we did this instead?
       /*
       key = Math.floor(Math.random() * 23)
+      var queryString = 'SELECT id, fortune FROM fortunes WHERE id=?';
       connection.query(
-        'SELECT id, fortune FROM fortunes WHERE id=?', [key],
+        queryString, [key],
         (err, results, fields) => {
-          log.debug({req_id: reqId, elapsed: elapsed(start)}, "query time");
+          log.debug({req_id: reqId, elapsed: elapsed(start), query: queryString}, "query time");
           cb(err, results[0].fortune)
         });
         */

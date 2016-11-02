@@ -50,6 +50,7 @@ services:
       - MYSQL_USER=me
       - MYSQL_PASSWORD=password1
       - MYSQL_DATABASE=mydb
+      - LOG_LEVEL=debug
     logging:
       driver: syslog
       options:
