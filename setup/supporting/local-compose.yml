@@ -20,7 +20,7 @@ consul:
 
 
 prometheus:
-    build: ./prometheus
+    image: 0x74696d/prometheus:latest
     mem_limit: 128m
     restart: always
     labels:
