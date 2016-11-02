@@ -1,0 +1,122 @@
+version: '2'
+
+# note: SELF_HOST and LOGSTASH_HOST variables are set by the environment
+# on our Docker KVM host
+
+services:
+
+  # Nginx as a load-balancing tier and reverse proxy
+  nginx:
+    build: nginx/
+    mem_limit: 128m
+    ports:
+      - "80:80"     # nginx
+      - "9090:9090" # telemetry
+    network_mode: host
+    environment:
+      - SELF_HOST
+      - CONSUL=localhost
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "tcp://${LOGSTASH_HOST}:514"
+        tag: "nginx/{{ .ID }}"
+    volumes:
+      # we don't have a full set of tooling in the small container so
+      # this provides tools we want from the underlying host
+      # (this plus LX is how we get DTrace on Linux on Triton!)
+      # you'll want to export PATH=$PATH:/native/bin
+      - /bin:/native/bin:ro
+      - /lib:/native/lib:ro
+      - /lib64:/native/lib64:ro
+    restart: always
+    command: >
+      /usr/local/bin/containerpilot
+      -config file:///etc/containerpilot.json
+      nginx
+
+  # the Node.js application
+  fortunes:
+    build: fortunes/
+    mem_limit: 128m
+    ports:
+      - "3000:3000" # node
+      - "9091:9091" # telemetry
+    network_mode: host
+    environment:
+      - SELF_HOST
+      - CONSUL=localhost
+      - MYSQL_HOST=localhost
+      - MYSQL_USER=me
+      - MYSQL_PASSWORD=password1
+      - MYSQL_DATABASE=mydb
+      - LOG_LEVEL=debug
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "tcp://${LOGSTASH_HOST}:514"
+        tag: "fortunes/{{ .ID }}"
+    volumes:
+      # we included these in our Docker build but we want to be able
+      # to update them live in the workshop w/o imposing a rebuild
+      - ./fortunes/fortunes.js:/src/fortunes.js
+      - ./fortunes/sensor.js:/src/sensor.js
+      - ./fortunes/prestart.js:/src/prestart.js
+      - ./fortunes/lib/data.js:/src/lib/data.js
+      - ./fortunes/lib/schema.js:/src/lib/schema.js
+    restart: always
+    command: >
+      /bin/containerpilot
+      -config file:///etc/containerpilot.json
+      node /src/fortunes.js
+
+  # database
+  mysql:
+    build: mysql/
+    mem_limit: 256m
+    ports:
+      - "9092:9092" # telemetry
+    network_mode: host
+    environment:
+      - SELF_HOST
+      - CONSUL=localhost
+      - MYSQL_USER=me
+      - MYSQL_PASSWORD=password1
+      - MYSQL_REPL_USER=repl
+      - MYSQL_REPL_PASSWORD=password2
+      - MYSQL_DATABASE=mydb
+      - INNODB_BUFFER_POOL_SIZE=128
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "tcp://${LOGSTASH_HOST}:514"
+        tag: "mysql/{{ .ID }}"
+    restart: always
+
+  # consul agent that will join the shared cluster
+  consul:
+    build: consul/
+    mem_limit: 128m
+    ports:
+      - "8500:8500"
+      - "53:53"
+      - "8300:8300"
+      - "8301:8301"
+      - "8302:8302"
+      - "8400:8400"
+    network_mode: host
+    environment:
+      - SELF_HOST
+      - CONSUL_HOST
+    restart: always
+    command: >-
+      /usr/local/bin/containerpilot
+      -config file:///etc/containerpilot.json
+      /bin/consul agent
+          -data-dir=/data
+          -config-dir=/etc/consul
+          -bind=${PRIVATE_IP}
+          -rejoin
+          -retry-join ${CONSUL_HOST}
+          -retry-max 10
+          -retry-interval 10s

@@ -1,0 +1,127 @@
+version: '2'
+
+services:
+
+  # Nginx as a load-balancing tier and reverse proxy
+  nginx:
+    build: nginx/
+    mem_limit: 128m
+    ports:
+      - "80"     # nginx
+      - "9090" # telemetry
+    links:
+      - fortunes:fortunes
+      - consul:consul
+    environment:
+      - SELF_HOST=localhost
+      - CONSUL=consul
+    restart: always
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "tcp://localhost:514"
+        tag: "nginx/{{ .ID }}"
+    command: >
+      /usr/local/bin/containerpilot
+      -config file:///etc/containerpilot.json
+      nginx
+
+  # the Node.js application
+  fortunes:
+    build: fortunes/
+    mem_limit: 128m
+    ports:
+      - "3000:3000" # node
+      - "9091" # telemetry
+    links:
+      - mysql:mysql
+      - consul:consul
+    environment:
+      - SELF_HOST=localhost
+      - CONSUL=consul
+      - MYSQL_HOST=mysql
+      - MYSQL_USER=me
+      - MYSQL_PASSWORD=password1
+      - MYSQL_DATABASE=mydb
+      - LOG_LEVEL=debug
+    volumes:
+      # we included these in our Docker build but we want to be able
+      # to update them live in the workshop w/o imposing a rebuild
+      - ./fortunes/fortunes.js:/src/fortunes.js
+      - ./fortunes/sensor.js:/src/sensor.js
+      - ./fortunes/prestart.js:/src/prestart.js
+      - ./fortunes/lib:/src/lib
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "tcp://localhost:514"
+        tag: "fortunes/{{ .ID }}"
+    restart: always
+    command: >
+      /bin/containerpilot
+      -config file:///etc/containerpilot.json
+      node /src/fortunes.js
+
+  # database
+  mysql:
+    build: mysql/
+    mem_limit: 256m
+    ports:
+      - "3306:3306" # mysql
+      - "9092:9092" # telemetry
+    links:
+      - consul:consul
+    environment:
+      - SELF_HOST=localhost
+      - CONSUL=consul
+      - MYSQL_USER=me
+      - MYSQL_PASSWORD=password1
+      - MYSQL_REPL_USER=repl
+      - MYSQL_REPL_PASSWORD=password2
+      - MYSQL_DATABASE=mydb
+      - INNODB_BUFFER_POOL_SIZE=128
+      - INTERFACE=eth0
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "tcp://localhost:514"
+        tag: "mysql/{{ .ID }}"
+    restart: always
+
+  # consul agent that will join the shared cluster
+  consul:
+    build: consul/
+    mem_limit: 128m
+    ports:
+      - "8500:8500"
+      - "53:53"
+      - "8300:8300"
+      - "8301:8301"
+      - "8302:8302"
+      - "8400:8400"
+    environment:
+      - SELF_HOST=localhost
+      - CONSUL_HOST=localhost
+    restart: always
+    command: >-
+      /usr/local/bin/containerpilot
+      -config file:///etc/containerpilot.json
+      /bin/consul agent -server -bootstrap
+          -ui-dir /ui
+          -data-dir=/data
+          -config-dir=/etc/consul
+
+  logstash:
+    mem_limit: 256m
+    build: ./setup/supporting/logstash
+    environment:
+      - CONSUL=consul
+      - CONTAINERPILOT=file:///etc/containerpilot.json
+    links:
+    - consul:consul
+    ports:
+    - "514:514"   # syslog tcp port
+    volumes:
+      - ./setup/supporting/logstash.conf:/etc/logstash/conf.d/logstash.conf
+    command: >
+      /opt/logstash/bin/logstash -f /etc/logstash/conf.d/logstash.conf

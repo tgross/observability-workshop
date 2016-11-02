@@ -1,0 +1,14 @@
+{
+  "name": "fortunes",
+  "version": "0.0.1",
+  "description": "Fortunes",
+  "main": "fortunes.js",
+  "scripts": {},
+  "author": "Tim Gross, Joyent",
+  "repository": "github.com/tgross/observability-workshop",
+  "license": "MPL-2.0",
+  "dependencies": {
+    "mysql": "2.x.x",
+    "bunyan": "1.8.3"
+  }
+}

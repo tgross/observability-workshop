@@ -47,7 +47,7 @@ The KVM machine is running Debian and is preconfigured to include Docker and a r
 
 **Prometheus:** the ContainerPilot running inside each application will take measurements of the application and expose a Prometheus-compatible endpoint for scraping. A shared Prometheus server will scrape all student machines so that the students can examine monitoring and metrics.
 
-**Consul:** a shared Consul cluster provides service discovery for the ELK and Prometheus services. All applications will register themselves with our applications.
+**Consul:** a shared Consul cluster provides service discovery for the ELK and Prometheus services. All applications will register themselves with Consul via a Consul agent container running on the VM.
 
 
 ## The Applications
