@@ -55,11 +55,10 @@ The KVM machine is running Debian and is preconfigured to include Docker and a r
 **Nginx:** the Nginx instance has a single backend which is the Fortunes application described below. The Nginx container is running under ContainerPilot, which we'll use to expose a Telemetry endpoint that we scrape with Prometheus. Nginx logs can be enriched with a lot of metadata about requests and the server responses, so we're collecting lots of extra data here:
 
 ```
-access_log /var/log/nginx/access.log combined;
-log_format combined '$remote_addr - $remote_user [$time_local] $host '
-  '"$request" $status $bytes_sent $body_bytes_sent $request_time '
-  '"$http_referer" "$http_user_agent" $request_length $http_authorization '
-  '$http_x_forwarded_proto $http_x_forwarded_for $server_name';
+access_log /var/log/nginx/access.log main;
+log_format  main  '[$time_iso8601] $request_id "$request" '
+                      '$status $body_bytes_sent "$http_referer" '
+                      '$remote_addr "$http_user_agent"';
 ```
 
 **Node.js application:** this is a simple (and somewhat silly) Node.js application that replies to all responses with a "fortune." The fortune is loaded from a MySQL query but the key for that query comes from some manipulation of files on disk. The application is broken when we start the workshop, in two ways:
@@ -69,8 +68,6 @@ log_format combined '$remote_addr - $remote_user [$time_local] $host '
 
 The goal of the workshop is to identify both these bugs and fix them.
 
-The Node.js application is running under ContainerPilot, which we'll use to expose the Telemetry endpoint we scrape with Prometheus. It is also configured for tracing using `opentracing-javascript`, where we correlate the traces with the Nginx request ID and then log them. Its logs are shipped to our ELK stack.
-
-**Client application:** this container makes HTTP requests to the Nginx container continuously, to simulate load on the services.
+The Node.js application is running under ContainerPilot, which we'll use to expose the Telemetry endpoint we scrape with Prometheus. The application has been instrumented to correlate requests to the Nginx request ID and then log them (`opentracing-javascript` looks promising but is a little painful for this workshop). Its logs are shipped to our ELK stack.
 
 **MySQL:** this container is running MySQL and serves queries for the Fortunes application decribed above. MySQL is running under ContainerPilot to expoe the Telemetry endpoint we scrape with Prometheus. Its logs are shipped to our ELK stack. The Fortunes application makes inefficient queries to MySQL (requring a full table scan) and we will identify and fix this bug in the workshop.
