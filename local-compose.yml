@@ -122,6 +122,6 @@ services:
     ports:
     - "514:514"   # syslog tcp port
     volumes:
-      - ./setup/supporting/logstash.conf:/etc/logstash/conf.d/logstash.conf
+      - ./setup/supporting/logstash/logstash.conf:/etc/logstash/conf.d/logstash.conf
     command: >
       /opt/logstash/bin/logstash -f /etc/logstash/conf.d/logstash.conf
